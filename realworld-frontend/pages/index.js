@@ -1,5 +1,6 @@
 import Layout from '../components/Layout';
 import { useEffect, useState } from "react";
+import Link from 'next/link';
 
 export default function Home() {
   const [articles, setArticles] = useState([]);
@@ -8,8 +9,11 @@ export default function Home() {
   useEffect(() => {
     fetch('http://localhost:3000/api/articles')
       .then(response => response.json())
-      .then(data => setArticles(data.articles))
-      .catch(error => console.error('Error:', error));
+      .then(data => {
+        console.log('Articles data:', data.articles);
+        setArticles(data.articles || []);
+      })
+      .catch(error => console.error('Error fetching articles:', error));
 
     fetch('http://localhost:3000/api/tags')
       .then(response => response.json())
@@ -47,16 +51,18 @@ export default function Home() {
                       <i className="ion-heart"></i> {article.favoritesCount || 0}
                     </button>
                   </div>
-                  <a href={`/article/${article.slug}`} className="preview-link">
-                    <h1>{article.title}</h1>
-                    <p>{article.description}</p>
-                    <span>Read more...</span>
-                    <ul className="tag-list">
-                      {article.tagList.map(tag => (
-                        <li key={tag} className="tag-default tag-pill tag-outline">{tag}</li>
-                      ))}
-                    </ul>
-                  </a>
+                  <Link href={`/articles/${article.slug}`} legacyBehavior>
+                    <a className="preview-link">
+                      <h1>{article.title}</h1>
+                      <p>{article.description}</p>
+                      <span>Read more...</span>
+                      <ul className="tag-list">
+                        {article.tagList.map(tag => (
+                          <li key={tag} className="tag-default tag-pill tag-outline">{tag}</li>
+                        ))}
+                      </ul>
+                    </a>
+                  </Link>
                 </div>
               ))}
               <ul className="pagination">
