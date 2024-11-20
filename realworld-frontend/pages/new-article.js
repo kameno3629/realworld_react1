@@ -1,11 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 
 export default function NewArticle() {
+  const router = useRouter();
+  const { slug } = router.query;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [body, setBody] = useState('');
   const [tagList, setTagList] = useState('');
+
+  useEffect(() => {
+    if (slug) {
+      fetch(`http://localhost:3000/api/articles/${slug}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log('API response:', data);
+          const article = data.article || data;
+          setTitle(article.title);
+          setDescription(article.description);
+          setBody(article.body);
+          if (article.tag_list) {
+            setTagList(article.tag_list.join(', '));
+          }
+        })
+        .catch(error => console.error('Error loading article:', error));
+    }
+  }, [slug]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,8 +41,11 @@ export default function NewArticle() {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/api/articles', {
-        method: 'POST',
+      const method = slug ? 'PUT' : 'POST';
+      const url = slug ? `http://localhost:3000/api/articles/${slug}` : 'http://localhost:3000/api/articles';
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -35,7 +59,7 @@ export default function NewArticle() {
 
       const data = await response.json();
       console.log('Success:', data);
-      window.location.href = '/'; // ホーム画面にリダイレクト
+      router.push('/');
     } catch (error) {
       console.error('Error:', error);
     }
@@ -96,7 +120,7 @@ export default function NewArticle() {
                     </div>
                   </fieldset>
                   <button className="btn btn-lg pull-xs-right btn-primary" type="submit">
-                    Publish Article
+                    {slug ? 'Update Article' : 'Publish Article'}
                   </button>
                 </fieldset>
               </form>

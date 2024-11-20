@@ -25,6 +25,27 @@ export default function Article() {
     }
   }, [slug]);
 
+  const handleEdit = () => {
+    router.push(`/new-article?slug=${slug}`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/articles/${slug}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete the article');
+      }
+
+      console.log('Article deleted successfully');
+      router.push('/'); // ホーム画面にリダイレクト
+    } catch (error) {
+      console.error('Error deleting article:', error);
+    }
+  };
+
   if (!article) return <p>Loading...</p>;
 
   return (
@@ -35,19 +56,10 @@ export default function Article() {
             <h1>{article.title}</h1>
             <div className="article-meta">
               <span className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round"></i>
-                &nbsp; Follow Author <span className="counter">(10)</span>
-              </button>
-              &nbsp;&nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart"></i>
-                &nbsp; Favorite Post <span className="counter">(29)</span>
-              </button>
-              <button className="btn btn-sm btn-outline-secondary">
+              <button className="btn btn-sm btn-outline-secondary" onClick={handleEdit}>
                 <i className="ion-edit"></i> Edit Article
               </button>
-              <button className="btn btn-sm btn-outline-danger">
+              <button className="btn btn-sm btn-outline-danger" onClick={handleDelete}>
                 <i className="ion-trash-a"></i> Delete Article
               </button>
             </div>
@@ -71,19 +83,10 @@ export default function Article() {
           <div className="article-actions">
             <div className="article-meta">
               <span className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round"></i>
-                &nbsp; Follow Author
-              </button>
-              &nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart"></i>
-                &nbsp; Favorite Article <span className="counter">(29)</span>
-              </button>
-              <button className="btn btn-sm btn-outline-secondary">
+              <button className="btn btn-sm btn-outline-secondary" onClick={handleEdit}>
                 <i className="ion-edit"></i> Edit Article
               </button>
-              <button className="btn btn-sm btn-outline-danger">
+              <button className="btn btn-sm btn-outline-danger" onClick={handleDelete}>
                 <i className="ion-trash-a"></i> Delete Article
               </button>
             </div>
