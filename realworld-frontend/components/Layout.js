@@ -1,5 +1,6 @@
    // realworld-frontend/components/Layout.js
    import Head from 'next/head';
+   import Link from 'next/link';
 
    export default function Layout({ children }) {
      const userImageSrc = "/smiley-cyrus.jpeg";
@@ -12,26 +13,36 @@
          </Head>
          <nav className="navbar navbar-light">
            <div className="container">
-             <a className="navbar-brand" href="/">conduit</a>
+             <Link href="/" legacyBehavior>
+               <a className="navbar-brand">conduit</a>
+             </Link>
              <ul className="nav navbar-nav pull-xs-right">
                <li className="nav-item">
-                 <a className="nav-link active" href="/">Home</a>
+                 <Link href="/" legacyBehavior>
+                   <a className="nav-link active">Home</a>
+                 </Link>
                </li>
                <li className="nav-item">
-                 <a className="nav-link" href="/articles/new">
-                   <i className="ion-compose"></i>&nbsp;New Article
-                 </a>
+                 <Link href="/new-article" legacyBehavior>
+                   <a className="nav-link">
+                     <i className="ion-compose"></i>&nbsp;New Article
+                   </a>
+                 </Link>
                </li>
                <li className="nav-item">
-                 <a className="nav-link" href="/settings">
-                   <i className="ion-gear-a"></i>&nbsp;Settings
-                 </a>
+                 <Link href="/settings" legacyBehavior>
+                   <a className="nav-link">
+                     <i className="ion-gear-a"></i>&nbsp;Settings
+                   </a>
+                 </Link>
                </li>
                <li className="nav-item">
-                 <a className="nav-link" href="/profile/eric-simons">
-                   <img src={userImageSrc} className="user-pic" alt="User" />
-                   Eric Simons
-                 </a>
+                 <Link href="/profile/eric-simons" legacyBehavior>
+                   <a className="nav-link">
+                     <img src={userImageSrc} className="user-pic" alt="User" />
+                     Eric Simons
+                   </a>
+                 </Link>
                </li>
              </ul>
            </div>
@@ -41,7 +52,9 @@
 
          <footer>
            <div className="container">
-             <a href="/" className="logo-font">conduit</a>
+             <Link href="/" legacyBehavior>
+               <a className="logo-font">conduit</a>
+             </Link>
              <span className="attribution">
                An interactive learning project from <a href="https://thinkster.io">Thinkster</a>. Code & design licensed under MIT.
              </span>
